@@ -1,0 +1,6 @@
+name = "stagefill"
+compatibility_date = "2024-11-01"
+
+# Static-assets-only Worker: serve the folder's HTML directly (no Worker script).
+[assets]
+directory = "./"
