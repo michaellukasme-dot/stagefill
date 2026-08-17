@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Penny Lane Records — Sand</title>
+<meta name="theme-color" content="#140d0a">
+<!-- penny_lane_spin.html — Glen's Penny Lane label as a spinning record. Tap it (or ▶) and it plays the
+     40-minute "Sand" (Phish, The Mann, Philadelphia) via YouTube — the exact show Michael, Glen, Ryan &
+     Garrett were at together — the label spinning on a platter while it plays; tap again to pause both.
+     For Glen, Ryan & Garrett. -->
+<style>
+:root{--ink:#f4ece2;--muted:#b6a692}
+*{box-sizing:border-box}html,body{height:100%}
+body{margin:0;background:radial-gradient(120% 90% at 50% 12%,#3a241a,#140d0a 70%);color:var(--ink);
+  font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-height:100vh;text-align:center;padding:26px 18px 40px}
+.for{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#c9744b;font-weight:800;margin-bottom:16px}
+.for b{color:#f0d9a8}
+.deck{position:relative;width:min(70vw,380px);aspect-ratio:1;display:grid;place-items:center}
+.platter{position:absolute;inset:-5%;border-radius:50%;background:repeating-radial-gradient(circle at 50% 50%,#0c0c0e 0 2px,#161619 2px 4px);
+  box-shadow:0 24px 60px rgba(0,0,0,.6),inset 0 0 40px rgba(0,0,0,.6)}
+#rec{position:relative;width:86%;border-radius:50%;cursor:pointer;display:block;filter:drop-shadow(0 10px 26px rgba(0,0,0,.55));
+  animation:vinyl 1.9s linear infinite;animation-play-state:paused;will-change:transform}
+#rec.spin{animation-play-state:running}
+@keyframes vinyl{to{transform:rotate(360deg)}}
+.tone{position:absolute;top:6%;right:1%;width:42%;height:6px;background:linear-gradient(90deg,#8a8a90,#d8d8de);
+  border-radius:6px;transform-origin:right center;transform:rotate(-27deg);transition:transform .5s ease;box-shadow:0 3px 8px rgba(0,0,0,.5);z-index:3;pointer-events:none}
+.deck.playing .tone{transform:rotate(-8deg)}
+.btn{margin-top:22px;width:60px;height:60px;border-radius:50%;border:0;cursor:pointer;font-size:22px;color:#241109;
+  background:linear-gradient(135deg,#f6c14b,#e8823a);box-shadow:0 8px 22px rgba(232,130,58,.4);display:grid;place-items:center}
+.btn:active{transform:scale(.95)}
+.label{margin-top:18px;font-weight:900;font-size:18px}
+.sub{color:var(--muted);font-size:13px;margin-top:4px;max-width:440px}
+.yt{margin-top:20px;width:min(92vw,480px);aspect-ratio:16/9;border-radius:14px;overflow:hidden;box-shadow:0 12px 34px rgba(0,0,0,.5);background:#000}
+.yt iframe{width:100%;height:100%;border:0;display:block}
+.link{margin-top:14px;font-size:12.5px}.link a{color:#c9744b;font-weight:800;text-decoration:none}
+</style></head>
+<body>
+<div class="for">Penny Lane Records · for <b>Glen, Ryan &amp; Garrett</b></div>
+<div class="deck" id="deck">
+  <div class="platter"></div>
+  <img id="rec" src="penny_lane_logo.png" alt="Penny Lane Records — tap to play Sand">
+  <div class="tone"></div>
+</div>
+<button class="btn" id="btn" title="Play / pause">▶</button>
+<div class="label">Phish · “Sand”</div>
+<div class="sub">The Mann, Philadelphia — a 40-minute <i>Sand</i>. We were there for all of it. Tap the record.</div>
+<div class="yt"><div id="yt"></div></div>
+<div class="link"><a href="https://www.youtube.com/watch?v=5aFBiCu19sI" target="_blank" rel="noopener">▶ Open on YouTube ↗</a></div>
+<script>
+var VID="5aFBiCu19sI", player=null, ready=false;
+var rec=document.getElementById("rec"), btn=document.getElementById("btn"), deck=document.getElementById("deck");
+function setSpin(on){ rec.classList.toggle("spin",on); deck.classList.toggle("playing",on); btn.textContent=on?"❚❚":"▶"; }
+// YouTube IFrame API
+var tag=document.createElement("script"); tag.src="https://www.youtube.com/iframe_api";
+document.head.appendChild(tag);
+window.onYouTubeIframeAPIReady=function(){
+  player=new YT.Player("yt",{ videoId:VID,
+    playerVars:{playsinline:1,rel:0,modestbranding:1},
+    events:{
+      onReady:function(){ ready=true; },
+      onStateChange:function(e){ var s=e.data; setSpin(s===1||s===3); }  // 1 playing, 3 buffering
+    }});
+};
+function toggle(){
+  if(!ready||!player||!player.getPlayerState){ return; }
+  var s=player.getPlayerState();
+  if(s===1||s===3){ player.pauseVideo(); } else { player.playVideo(); }
+}
+btn.addEventListener("click",toggle); rec.addEventListener("click",toggle);
+</script>
+</body></html>
